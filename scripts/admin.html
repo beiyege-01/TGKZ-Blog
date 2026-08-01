@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>教程管理后台</title>
+    <style>
+      body { font-family: Inter, system-ui, sans-serif; margin: 0; background: #07111f; color: #f8fafc; }
+      .wrap { max-width: 1200px; margin: 0 auto; padding: 24px; }
+      .panel { background: rgba(15,23,42,0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 18px; margin-bottom: 16px; }
+      h1, h2 { margin-top: 0; }
+      .grid { display: grid; gap: 16px; grid-template-columns: 280px 1fr; }
+      ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+      button, input[type="file"], textarea { font: inherit; }
+      button { background: #2dd4bf; color: #052e2b; border: none; border-radius: 10px; padding: 8px 12px; cursor: pointer; }
+      .post-btn { width: 100%; text-align: left; padding: 10px 12px; background: rgba(255,255,255,0.06); color: #f8fafc; }
+      .post-btn.active { background: rgba(45, 212, 191, 0.2); border: 1px solid rgba(45,212,191,0.35); }
+      textarea { width: 100%; min-height: 560px; border-radius: 12px; padding: 12px; background: #020617; color: #e2e8f0; border: 1px solid rgba(255,255,255,0.12); }
+      .actions { display: flex; gap: 10px; align-items: center; margin-top: 12px; }
+      .muted { color: #94a3b8; font-size: 0.95rem; }
+      .status { margin-top: 10px; color: #5ee7df; }
+      @media (max-width: 840px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="panel">
+        <h1>教程管理后台</h1>
+        <p class="muted">你可以在这里直接编辑和上传 Markdown 教程文件，保存后站点会在下次构建时使用。</p>
+      </div>
+      <div class="grid">
+        <div class="panel">
+          <h2>文章列表</h2>
+          <ul id="post-list"></ul>
+          <hr />
+          <input type="file" id="file-input" accept=".md,text/markdown" />
+          <div class="actions">
+            <button id="upload-btn">上传 .md 文件</button>
+          </div>
+          <div id="upload-status" class="status"></div>
+        </div>
+        <div class="panel">
+          <h2>编辑内容</h2>
+          <div class="muted" id="editor-meta">请选择一篇文章</div>
+          <textarea id="editor" placeholder="这里输入 Markdown 内容"></textarea>
+          <div class="actions">
+            <button id="save-btn">保存</button>
+            <button id="reload-btn">刷新</button>
+          </div>
+          <div id="save-status" class="status"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      let posts = [];
+      let activeFile = null;
+
+      const listEl = document.getElementById('post-list');
+      const editorEl = document.getElementById('editor');
+      const editorMetaEl = document.getElementById('editor-meta');
+      const saveStatusEl = document.getElementById('save-status');
+      const uploadStatusEl = document.getElementById('upload-status');
+
+      async function loadPosts() {
+        const res = await fetch('/api/posts');
+        const data = await res.json();
+        posts = data.posts || [];
+        renderPosts();
+        if (!activeFile && posts.length) {
+          selectPost(posts[0].file);
+        }
+      }
+
+      function renderPosts() {
+        listEl.innerHTML = '';
+        posts.forEach((post) => {
+          const li = document.createElement('li');
+          const button = document.createElement('button');
+          button.className = 'post-btn' + (activeFile === post.file ? ' active' : '');
+          button.textContent = post.title;
+          button.onclick = () => selectPost(post.file);
+          li.appendChild(button);
+          listEl.appendChild(li);
+        });
+      }
+
+      async function selectPost(file) {
+        activeFile = file;
+        renderPosts();
+        editorMetaEl.textContent = `正在编辑：${file}`;
+        const res = await fetch(`/api/posts/${encodeURIComponent(file)}`);
+        const data = await res.json();
+        editorEl.value = data.post?.content || '';
+      }
+
+      document.getElementById('save-btn').onclick = async () => {
+        if (!activeFile) return;
+        saveStatusEl.textContent = '保存中...';
+        const res = await fetch(`/api/posts/${encodeURIComponent(activeFile)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: editorEl.value })
+        });
+        const data = await res.json();
+        saveStatusEl.textContent = data.ok ? '保存成功' : `保存失败：${data.message}`;
+        if (data.ok) {
+          loadPosts();
+        }
+      };
+
+      document.getElementById('reload-btn').onclick = () => {
+        if (activeFile) selectPost(activeFile);
+      };
+
+      document.getElementById('upload-btn').onclick = async () => {
+        const input = document.getElementById('file-input');
+        const file = input.files?.[0];
+        if (!file) {
+          uploadStatusEl.textContent = '请选择一个 .md 文件';
+          return;
+        }
+        const formData = new FormData();
+        formData.append('file', file);
+        uploadStatusEl.textContent = '上传中...';
+        const res = await fetch('/api/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        uploadStatusEl.textContent = data.ok ? `已上传：${data.file}` : `上传失败：${data.message}`;
+        if (data.ok) {
+          input.value = '';
+          loadPosts();
+          selectPost(data.file);
+        }
+      };
+
+      loadPosts();
+    </script>
+  </body>
+</html>

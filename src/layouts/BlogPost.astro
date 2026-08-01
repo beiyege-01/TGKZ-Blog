@@ -1,0 +1,313 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+import SplitText from '../components/SplitText.astro';
+
+type Heading = {
+	depth: number;
+	slug: string;
+	text: string;
+};
+
+type Props = CollectionEntry<'blog'>['data'] & {
+	headings?: Heading[];
+	recommendedPosts?: CollectionEntry<'blog'>[];
+};
+
+const { title, description, pubDate, updatedDate, heroImage, headings = [], recommendedPosts = [] } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+		<style>
+			main {
+				width: calc(100% - 2em);
+				max-width: 100%;
+				margin: 0;
+			}
+			.progress-track {
+				position: sticky;
+				top: 0;
+				z-index: 20;
+				width: 100%;
+				height: 3px;
+				background: rgba(148, 163, 184, 0.16);
+				backdrop-filter: blur(6px);
+			}
+			.progress-bar {
+				width: 0%;
+				height: 100%;
+				background: linear-gradient(90deg, var(--accent), #8b5cf6);
+				transition: width 120ms ease-out;
+			}
+			.hero-image {
+				width: 100%;
+				padding-top: 1rem;
+			}
+			.hero-image img {
+				display: block;
+				margin: 0 auto;
+				border-radius: 20px;
+				box-shadow: var(--box-shadow);
+				transform: translateY(var(--parallax, 0px));
+			}
+			.article-shell {
+				display: grid;
+				grid-template-columns: minmax(240px, 260px) minmax(0, 780px);
+				gap: 2.4rem;
+				align-items: start;
+				width: min(1140px, calc(100% - 2em));
+				margin: 1.4rem auto 0;
+			}
+			.toc-card {
+				position: sticky;
+				top: 3.5rem;
+				padding: 1.1rem 1.2rem 1.2rem;
+				border: 1px solid var(--border);
+				border-radius: 16px;
+				background: rgba(10, 14, 26, 0.78);
+				backdrop-filter: blur(16px);
+				box-shadow: 0 18px 45px rgba(2, 6, 23, 0.24);
+			}
+			.toc-label {
+				margin: 0 0 0.7rem;
+				font-size: 0.72rem;
+				letter-spacing: 0.22em;
+				text-transform: uppercase;
+				color: #94a3b8;
+			}
+			.toc {
+				display: flex;
+				flex-direction: column;
+				gap: 0.3rem;
+			}
+			.toc-link {
+				display: block;
+				padding: 0.38rem 0;
+				color: #cbd5e1;
+				font-size: 0.93rem;
+				line-height: 1.35;
+				border-left: 2px solid transparent;
+				padding-left: 0.55rem;
+				transition: color 180ms ease, border-color 180ms ease, transform 180ms ease;
+			}
+			.toc-link:hover {
+				color: var(--accent);
+				border-left-color: rgba(94, 231, 223, 0.5);
+				transform: translateX(2px);
+			}
+			.toc-link.depth-3 {
+				padding-left: 1.1rem;
+				font-size: 0.88rem;
+				opacity: 0.86;
+			}
+			.toc-link.depth-4 {
+				padding-left: 1.6rem;
+				font-size: 0.84rem;
+				opacity: 0.78;
+			}
+			.prose {
+				width: 100%;
+				max-width: 780px;
+				margin: 0 auto;
+				padding: 1.2em 0 2em;
+				color: #e2e8f0;
+			}
+			.prose p,
+			.prose ul,
+			.prose ol,
+			.prose blockquote,
+			.prose pre,
+			.prose table {
+				font-size: 1.03rem;
+				line-height: 1.85;
+			}
+			.prose h2,
+			.prose h3,
+			.prose h4 {
+				margin-top: 2em;
+				margin-bottom: 0.7em;
+				color: #f8fafc;
+			}
+			.title {
+				margin-bottom: 1.4em;
+				padding: 1.4em 0 1em;
+				text-align: left;
+				line-height: 1.3;
+				border-bottom: 1px solid var(--border);
+			}
+			.title h1 {
+				margin: 0 0 0.5em 0;
+				font-size: clamp(1.7rem, 3.6vw, 2.5rem);
+				line-height: 1.12;
+				letter-spacing: -0.02em;
+			}
+			.date {
+				margin-bottom: 0.5em;
+				color: #94a3b8;
+				font-size: 0.95rem;
+			}
+			.last-updated-on {
+				font-style: italic;
+			}
+			.recommendations {
+				margin-top: 2.4rem;
+				padding-top: 1.2rem;
+				border-top: 1px solid var(--border);
+			}
+			.recommendations-title {
+				margin-bottom: 0.9rem;
+				font-size: 0.95rem;
+				font-weight: 600;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				color: #94a3b8;
+			}
+			.recommendation-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 1rem;
+			}
+			.recommend-card {
+				display: block;
+				padding: 1rem;
+				border: 1px solid var(--border);
+				border-radius: 16px;
+				background: rgba(15, 23, 42, 0.72);
+			}
+			.recommend-card:hover {
+				transform: translateY(-2px);
+				border-color: rgba(94, 231, 223, 0.38);
+				box-shadow: 0 16px 38px rgba(2, 6, 23, 0.26);
+			}
+			.recommend-card h3 {
+				margin: 0 0 0.35rem;
+				font-size: 1rem;
+				color: #f8fafc;
+			}
+			.recommend-card p {
+				margin: 0;
+				font-size: 0.92rem;
+				color: #94a3b8;
+			}
+			@media (max-width: 900px) {
+				.article-shell {
+					grid-template-columns: 1fr;
+				}
+				.toc-card {
+					position: static;
+					margin-bottom: 1rem;
+				}
+				.recommendation-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<div class="progress-track" aria-hidden="true">
+			<div class="progress-bar" id="reading-progress"></div>
+		</div>
+		<main>
+			<article>
+				<div class="hero-image reveal">
+					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+				</div>
+				<div class="article-shell">
+					{headings.length > 0 && (
+						<aside class="toc-card reveal">
+							<p class="toc-label">目录</p>
+							<nav class="toc">
+								{headings.map((heading) => (
+									<a class={`toc-link depth-${heading.depth}`} href={`#${heading.slug}`}>
+										{heading.text}
+									</a>
+								))}
+							</nav>
+						</aside>
+					)}
+					<div class="prose reveal">
+						<div class="title">
+							<div class="date">
+								<FormattedDate date={pubDate} />
+								{
+									updatedDate && (
+										<div class="last-updated-on">
+											Last updated on <FormattedDate date={updatedDate} />
+										</div>
+									)
+								}
+							</div>
+							<h1>
+								<SplitText as="span" text={title} />
+							</h1>
+							<hr />
+						</div>
+						<slot />
+						{recommendedPosts.length > 0 && (
+							<section class="recommendations">
+								<p class="recommendations-title">相关推荐</p>
+								<div class="recommendation-grid">
+									{recommendedPosts.map((post) => (
+										<a class="recommend-card" href={`/blog/${post.id}`}>
+											<h3>{post.data.title}</h3>
+											<p>{post.data.description}</p>
+										</a>
+									))}
+								</div>
+							</section>
+						)}
+					</div>
+				</div>
+			</article>
+		</main>
+		<Footer />
+		<script>
+			const revealTargets = document.querySelectorAll('.reveal');
+			// 先给所有元素打上"可见"标记，避免 JS 未执行或观察器未触发时内容不可见
+			revealTargets.forEach((target) => target.classList.add('is-visible'));
+			const observer = 'IntersectionObserver' in window ? new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							entry.target.classList.add('is-visible');
+							observer.unobserve(entry.target);
+						}
+					});
+				},
+				{ threshold: 0.16 }
+			) : null;
+			revealTargets.forEach((target) => observer?.observe(target));
+
+			const hero = document.querySelector('.hero-image');
+			if (hero) {
+				const onScroll = () => {
+					const offset = Math.max(-8, Math.min(8, window.scrollY * 0.03));
+					hero.style.setProperty('--parallax', `${offset}px`);
+				};
+				window.addEventListener('scroll', onScroll, { passive: true });
+				onScroll();
+			}
+
+			const progressBar = document.getElementById('reading-progress');
+			if (progressBar) {
+				const updateProgress = () => {
+					const scrollTop = window.scrollY;
+					const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+					const progress = maxScroll > 0 ? Math.min(100, Math.max(0, (scrollTop / maxScroll) * 100)) : 0;
+					progressBar.style.width = `${progress}%`;
+				};
+				window.addEventListener('scroll', updateProgress, { passive: true });
+				window.addEventListener('resize', updateProgress);
+				updateProgress();
+			}
+		</script>
+	</body>
+</html>

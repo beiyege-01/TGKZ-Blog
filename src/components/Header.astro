@@ -1,0 +1,76 @@
+---
+import { SITE_TITLE } from '../consts';
+import HeaderLink from './HeaderLink.astro';
+---
+
+<header>
+	<nav>
+		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<div class="internal-links">
+			<HeaderLink href="/">首页</HeaderLink>
+			<HeaderLink href="/blog">教程列表</HeaderLink>
+			<HeaderLink href="/about">关于</HeaderLink>
+			<!-- 后台入口仅保留在本地开发环境（本机可访问），不会被推送到公网 -->
+			{
+				import.meta.env.DEV && (
+					<a href="http://localhost:4322/admin" target="_blank" rel="noopener noreferrer">后台</a>
+				)
+			}
+		</div>
+	</nav>
+</header>
+<style>
+	header {
+		margin: 0;
+		padding: 1rem 1.4rem;
+		backdrop-filter: blur(16px);
+		background: rgba(2, 6, 23, 0.72);
+		border-bottom: 1px solid rgba(255,255,255,0.08);
+		position: sticky;
+		top: 0;
+		z-index: 20;
+	}
+	h2 {
+		margin: 0;
+		font-size: 1rem;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+	}
+	h2 a,
+	h2 a.active {
+		text-decoration: none;
+		color: #f8fafc;
+	}
+	nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		max-width: 1140px;
+		margin: 0 auto;
+	}
+	nav a {
+		padding: 0.7em 0.9em;
+		color: #cbd5e1;
+		border-bottom: 2px solid transparent;
+		text-decoration: none;
+		font-size: 0.96rem;
+		transition: color 200ms ease, border-color 200ms ease;
+	}
+	nav a:hover,
+	nav a.active {
+		text-decoration: none;
+		color: #f8fafc;
+		border-bottom-color: var(--accent);
+	}
+	.internal-links {
+		display: flex;
+		gap: 0.2rem;
+	}
+	@media (max-width: 720px) {
+		nav {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.6rem;
+		}
+	}
+</style>

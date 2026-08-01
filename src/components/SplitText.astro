@@ -1,0 +1,88 @@
+---
+interface Props {
+	text: string;
+	as?: string;
+	className?: string;
+	/** burst: 悬停时字母四散分解；rise: 仅进场逐个弹入 */
+	variant?: 'burst' | 'rise';
+}
+
+const { text, as = 'h1', className = '', variant = 'burst' } = Astro.props;
+const Tag = as as any;
+const chars = Array.from(text);
+---
+
+<Tag class={`split-text split-${variant} ${className}`} data-split aria-label={text}>
+	{
+		chars.map((c, i) =>
+			c === ' ' ? (
+				<span class="split-char split-space"></span>
+			) : (
+				<span class="split-char" data-i={i}>{c}</span>
+			),
+		)
+	}
+</Tag>
+
+<style>
+	.split-text {
+		display: inline-block;
+	}
+	.split-char {
+		display: inline-block;
+		opacity: 0;
+		transform: translateY(0.6em);
+		transition:
+			opacity 420ms ease,
+			transform 340ms cubic-bezier(0.22, 1, 0.36, 1),
+			color 200ms ease;
+		will-change: transform, opacity;
+	}
+	.split-char.split-space {
+		width: 0.32em;
+		opacity: 0;
+	}
+	.split-char.is-in {
+		opacity: 1;
+		transform: none;
+	}
+
+	/* ---- burst：悬停时四散分解 ---- */
+	.split-burst .split-char.is-in {
+		transition:
+			opacity 420ms ease,
+			transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+			color 200ms ease;
+	}
+	.split-burst:hover .split-char.is-in {
+		transform: translate(var(--dx, 0), var(--dy, 0)) rotate(var(--dr, 0deg)) scale(0.86);
+		opacity: 0.35;
+	}
+	.split-burst:hover .split-char.is-in:nth-child(3n) {
+		opacity: 0.15;
+	}
+</style>
+
+<script>
+	const splitEls = document.querySelectorAll<HTMLElement>('[data-split]');
+	splitEls.forEach((el) => {
+		const chars = [...el.querySelectorAll<HTMLElement>('.split-char:not(.split-space)')];
+		chars.forEach((char, i) => {
+			// 黄金角均匀撒点，让字母向四周散开而不是同一方向
+			const angle = (i * 137.508) % 360;
+			const radius = 0.22 + (i % 3) * 0.16;
+			const dx = Math.cos((angle * Math.PI) / 180) * radius;
+			const dy = Math.sin((angle * Math.PI) / 180) * radius;
+			char.style.setProperty('--dx', `${dx.toFixed(3)}em`);
+			char.style.setProperty('--dy', `${dy.toFixed(3)}em`);
+			char.style.setProperty('--dr', `${((i % 7) - 3) * 10}deg`);
+			char.style.transitionDelay = `${(i % 9) * 24}ms`;
+		});
+		// 进场：逐个弹入
+		chars.forEach((char, i) => {
+			setTimeout(() => {
+				char.classList.add('is-in');
+			}, 60 + i * 55);
+		});
+	});
+</script>
