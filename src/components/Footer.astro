@@ -45,6 +45,7 @@ const today = new Date();
 		background: linear-gradient(var(--gray-gradient)) no-repeat;
 		color: rgb(var(--gray));
 		text-align: center;
+		border-top: 1px solid var(--border);
 	}
 	.social-links {
 		display: flex;
@@ -56,7 +57,11 @@ const today = new Date();
 		text-decoration: none;
 		color: rgb(var(--gray));
 	}
+	.social-links a::before {
+		inset: -4px;
+		border-radius: 16px;
+	}
 	.social-links a:hover {
-		color: rgb(var(--gray-dark));
+		color: var(--accent);
 	}
 </style>

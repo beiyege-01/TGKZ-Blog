@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "admin": "node scripts/admin-server.mjs"
+    "admin": "node scripts/admin-server.mjs",
+    "import": "node scripts/import-obsidian.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.5",

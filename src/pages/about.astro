@@ -1,63 +1,424 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
 import Layout from '../layouts/BlogPost.astro';
 ---
 
 <Layout
-	title="About Me"
-	description="Lorem ipsum dolor sit amet"
+	title="关于我"
+	description="你好呀，我是天工开帧，一个兴趣使然的 AI 动画师，一个不入流的 AI 时代探索者。"
 	pubDate={new Date('August 08 2021')}
-	heroImage={AboutHeroImage}
+	heroVideo="/videos/wan2.2_00003.mp4"
 >
+	<div class="about-intro">
+		<p class="about-hello">你好呀，我是天工开帧。</p>
+		<p class="about-line">一个兴趣使然的 AI 动画师，</p>
+		<p class="about-line">一个不入流的 AI 时代探索者。</p>
+	</div>
+
 	<p>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-		labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo
-		viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam
-		adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus
-		et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus
-		vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque
-		sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
+		这个博客记录我在本地 AI 世界里摸索的点点滴滴——从 GitHub 上淘到的宝藏项目，到本地大模型的一步步搭建，
+		再到 TTS 语音合成、GPU 加速这些折腾人的东西。每篇教程都是我自己踩过坑、跑通之后整理出来的，希望能帮你少走弯路。
 	</p>
 
 	<p>
-		Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non
-		tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non
-		blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna
-		porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis
-		massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc.
-		Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis
-		bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra
-		massa massa ultricies mi.
+		我做的动画，大多是用 ComfyUI 等工具在本地渲染出来的。技术不是为了炫技，而是为了让想象落地。
+		这里不追热点、不贩卖焦虑，只有一篇篇能照着做的教程，和一点关于动手的朴素快乐。
 	</p>
 
 	<p>
-		Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl
-		suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet
-		nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae
-		turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem
-		dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat
-		semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus
-		vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum
-		facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam
-		vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla
-		urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
+		如果你也在折腾本地 AI，欢迎常来看看。愿我们都能在这个时代里，找到属于自己的那份好奇心。
 	</p>
 
-	<p>
-		Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper
-		viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc
-		scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur
-		gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus
-		pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim
-		blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id
-		cursus metus aliquam eleifend mi.
-	</p>
+	<p class="about-coffee-invite">当然，如果你愿意的话，也可以请我喝杯咖啡 ☕</p>
 
-	<p>
-		Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta
-		nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam
-		tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci
-		ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar
-		proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
-	</p>
+	<div class="about-qrcode">
+		<img src="/images/qrcode.jpg" alt="请我喝咖啡" width="260" height="260" loading="lazy" />
+	</div>
+
+	<div class="coffee" aria-hidden="true">
+		<div class="coffee__cup">
+			<div class="coffee__cup-part coffee__cup-part--a"></div>
+			<div class="coffee__cup-part coffee__cup-part--b"></div>
+			<div class="coffee__cup-part coffee__cup-part--c"></div>
+			<div class="coffee__cup-part coffee__cup-part--d"></div>
+			<div class="coffee__cup-part coffee__cup-part--e"></div>
+			<div class="coffee__cup-part coffee__cup-part--f"></div>
+			<svg class="coffee__cup-handle" viewBox="0 0 140 62" aria-hidden="true">
+				<path
+					d="M64,4.413s6.64-2.913,11-2.913c11.739,0,19.5,10.759,19.5,22.497,0,23.475-45,22.497-45,22.497"
+				/>
+			</svg>
+		</div>
+		<svg class="coffee__steam" viewBox="0 0 100 100" aria-hidden="true">
+			<path class="coffee__steam-part coffee__steam-part--a" d="M50,95C50,80 50,75 50,65" />
+			<path class="coffee__steam-part coffee__steam-part--b" d="M50,95C50,80 50,75 50,65" />
+			<path class="coffee__steam-part coffee__steam-part--c" d="M50,95C50,80 50,75 50,65" />
+			<path class="coffee__steam-part coffee__steam-part--d" d="M50,95C50,80 50,75 50,65" />
+			<path class="coffee__steam-part coffee__steam-part--e" d="M50,95C50,80 50,75 50,65" />
+		</svg>
+		<svg class="coffee__steam coffee__steam--right" viewBox="0 0 100 100" aria-hidden="true">
+			<path class="coffee__steam-part coffee__steam-part--a" d="M50,95C50,80 50,75 50,65" />
+			<path class="coffee__steam-part coffee__steam-part--b" d="M50,95C50,80 50,75 50,65" />
+			<path class="coffee__steam-part coffee__steam-part--c" d="M50,95C50,80 50,75 50,65" />
+			<path class="coffee__steam-part coffee__steam-part--d" d="M50,95C50,80 50,75 50,65" />
+			<path class="coffee__steam-part coffee__steam-part--e" d="M50,95C50,80 50,75 50,65" />
+		</svg>
+	</div>
 </Layout>
+
+<style>
+	/* ===== 关于页：自我介绍（居中排版） ===== */
+	:global(.prose) {
+		text-align: center;
+	}
+	:global(.title) {
+		text-align: center;
+	}
+	.about-intro {
+		margin: 1.2em 0 2.4em;
+	}
+	.about-hello {
+		font-family: var(--font-heading);
+		font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+		font-weight: 700;
+		color: #3d2f1e;
+		margin: 0 0 1.2rem;
+		line-height: 1.35;
+	}
+	.about-line {
+		font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+		color: #6b5638;
+		margin: 0;
+		line-height: 1.9;
+	}
+	.about-coffee-invite {
+		margin: 2.6em 0 0;
+		font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+		color: #7c3d14;
+		font-weight: 600;
+	}
+	.about-qrcode {
+		margin: 1.6em 0 0;
+	}
+	.about-qrcode img {
+		width: clamp(180px, 40vw, 260px);
+		height: auto;
+		border-radius: 18px;
+		border: 2px solid var(--border);
+		box-shadow: var(--box-shadow);
+		transition: transform 220ms ease, box-shadow 220ms ease;
+	}
+	.about-qrcode img:hover {
+		transform: translateY(-3px) scale(1.03);
+		box-shadow: 0 16px 36px rgba(90, 60, 30, 0.24);
+	}
+
+	/* ===== 咖啡杯动画（适配旧报纸暖米黄主题） ===== */
+	.coffee {
+		--coffee-bg: #d8cdb4;
+		--coffee-fg: #3d2f1e;
+		font-size: 0.55em;
+		position: relative;
+		width: 21.5em;
+		height: 9em;
+		margin: 4em auto 0;
+	}
+	.coffee:before {
+		border-bottom: 0.25em dashed var(--coffee-fg);
+		content: '';
+		display: block;
+		position: absolute;
+		top: 7.5em;
+		width: 100%;
+		opacity: 0.45;
+	}
+	.coffee__cup,
+	.coffee__cup-part,
+	.coffee__cup-handle,
+	.coffee__steam-part {
+		animation-duration: 8s;
+		animation-iteration-count: infinite;
+	}
+	.coffee__cup,
+	.coffee__cup-part,
+	.coffee__cup-handle {
+		animation-timing-function: cubic-bezier(0.9, 0, 0.1, 1);
+	}
+	.coffee__cup {
+		animation-name: cup;
+		position: relative;
+		width: 11.25em;
+		height: 9em;
+	}
+	.coffee__cup-part {
+		background-color: var(--coffee-bg);
+		position: absolute;
+	}
+	.coffee__cup-part--a {
+		animation-name: cup-part-a;
+		border-radius: 5.625em 5.625em 5.625em 5.625em / 2em 2em 2.7em 2.7em;
+		box-shadow: 0 0 0 0.3em var(--coffee-fg) inset;
+		top: 4.3em;
+		width: 11.25em;
+		height: 4.7em;
+	}
+	.coffee__cup-part--b {
+		animation-name: cup-part-b;
+		background-color: transparent;
+		border-radius: 5.625em / 2em;
+		box-shadow: 0 0 0 0.2em var(--coffee-fg) inset;
+		top: 4.3em;
+		width: 11.25em;
+		height: 4em;
+	}
+	.coffee__cup-part--c {
+		animation-name: cup-part-c;
+		border-radius: 1.7em / 0.45em;
+		box-shadow: 0 0 0 0.2em var(--coffee-fg) inset;
+		top: 7.1em;
+		left: 3.925em;
+		width: 3.4em;
+		height: 0.9em;
+	}
+	.coffee__cup-part--d,
+	.coffee__cup-part--e,
+	.coffee__cup-part--f {
+		z-index: 1;
+	}
+	.coffee__cup-part--d {
+		animation-name: cup-part-d;
+		border-radius: 3.6em 3.6em 3.3em 3.3em / 1em 1em 3.5em 3.5em;
+		box-shadow: 0 0 0 0.2em var(--coffee-fg) inset;
+		top: 2.55em;
+		left: 2.025em;
+		width: 7.2em;
+		height: 5.15em;
+	}
+	.coffee__cup-part--e {
+		animation-name: cup-part-e;
+		background-color: var(--coffee-fg);
+		box-shadow:
+			0 0 0 0.2em var(--coffee-fg) inset,
+			0 1em 0 var(--coffee-bg) inset;
+		border-radius: 3.5em / 1em;
+		top: 2.65em;
+		left: 2.125em;
+		width: 7em;
+		height: 2em;
+	}
+	.coffee__cup-part--f {
+		animation-name: cup-part-f;
+		background-color: transparent;
+		top: 4.1em;
+		left: 5.925em;
+		width: 4.8em;
+		height: 3em;
+	}
+	.coffee__cup-handle {
+		animation-name: cup-handle;
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		width: 14em;
+		height: 6.2em;
+		overflow: visible;
+		fill: none;
+		stroke: var(--coffee-fg);
+		stroke-width: 1.8px;
+	}
+	.coffee__cup,
+	.coffee__steam {
+		transform: translateX(-50%);
+	}
+	.coffee__cup {
+		left: 50%;
+	}
+	.coffee__steam {
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 50%;
+		width: 3.5em;
+		height: 3.5em;
+		overflow: visible;
+		fill: none;
+		stroke: var(--coffee-fg);
+		stroke-width: 1.8px;
+		stroke-linecap: round;
+	}
+	.coffee__steam--right {
+		left: auto;
+		right: 0;
+		transform: translateX(50%);
+	}
+	.coffee__steam-part {
+		animation-name: steam-left;
+		animation-timing-function: linear;
+		stroke-dashoffset: 48;
+	}
+	.coffee__steam--right .coffee__steam-part {
+		animation-name: steam-right;
+		stroke-dashoffset: 35;
+	}
+	.coffee__steam-part--a {
+		stroke-dasharray: 24 142;
+	}
+	.coffee__steam-part--b {
+		stroke-dasharray: 30 8 10 130;
+	}
+	.coffee__steam-part--c {
+		stroke-dasharray: 15 6 1 134;
+	}
+	.coffee__steam-part--d {
+		stroke-dasharray: 18 6 1 90;
+	}
+	.coffee__steam-part--e {
+		stroke-dasharray: 25 6 4 76;
+	}
+
+	/* 移动端缩小 */
+	@media (max-width: 720px) {
+		.coffee {
+			font-size: 0.42em;
+		}
+	}
+
+	/* Animations */
+	@keyframes cup {
+		from,
+		25%,
+		75%,
+		to {
+			left: 0;
+		}
+		50% {
+			left: 21.5em;
+		}
+	}
+	@keyframes cup-part-a {
+		from,
+		50%,
+		to {
+			width: 11.25em;
+		}
+		25%,
+		75% {
+			width: calc(11.25em + 21.5em);
+		}
+	}
+	@keyframes cup-part-b {
+		from,
+		50%,
+		to {
+			width: 11.25em;
+		}
+		25%,
+		75% {
+			width: calc(11.25em + 21.5em);
+		}
+	}
+	@keyframes cup-part-c {
+		from,
+		50%,
+		to {
+			width: 3.4em;
+		}
+		25%,
+		75% {
+			width: calc(3.4em + 21.5em);
+		}
+	}
+	@keyframes cup-part-d {
+		from,
+		50%,
+		to {
+			width: 7.2em;
+		}
+		25%,
+		75% {
+			width: calc(7.2em + 21.5em);
+		}
+	}
+	@keyframes cup-part-e {
+		from,
+		50%,
+		to {
+			box-shadow:
+				0 0 0 0.2em var(--coffee-fg) inset,
+				0 1em 0 var(--coffee-bg) inset;
+			width: 7em;
+		}
+		25%,
+		75% {
+			box-shadow:
+				0 0 0 0.2em var(--coffee-fg) inset,
+				0 1.5em 0 var(--coffee-bg) inset;
+			width: calc(7em + 21.5em);
+		}
+	}
+	@keyframes cup-part-f {
+		from {
+			left: 5.925em;
+			z-index: 0;
+		}
+		25% {
+			left: calc(5.925em + 8.35em);
+			z-index: 0;
+		}
+		50% {
+			left: 0.525em;
+			z-index: 0;
+		}
+		50.01% {
+			left: 0.525em;
+			z-index: 1;
+		}
+		75% {
+			left: calc(5.925em + 8.35em);
+			z-index: 1;
+		}
+		to {
+			left: 5.925em;
+			z-index: 1;
+		}
+	}
+	@keyframes cup-handle {
+		from,
+		to {
+			animation-timing-function: ease-in;
+			d: path('M64,4.413s6.64-2.913,11-2.913c11.739,0,19.5,10.759,19.5,22.497,0,23.475-45,22.497-45,22.497');
+			transform: translate(0, 0);
+		}
+		10%,
+		40%,
+		60%,
+		90% {
+			animation-timing-function: ease-out;
+			d: path('M48.036,4.415s-.03-2.913-.049-2.913c-.052,0-.087,10.759-.087,22.497,0,23.475,.2,22.497,.2,22.497');
+			transform: translate(0, 15px);
+		}
+		50% {
+			animation-timing-function: ease-in;
+			d: path('M32,4.413s-6.64-2.913-11-2.913C9.261,1.5,1.5,12.259,1.5,23.997c0,23.475,45,22.497,45,22.497');
+			transform: translate(0, 0);
+		}
+	}
+	@keyframes steam-left {
+		from {
+			stroke-dashoffset: 48;
+		}
+		25%,
+		to {
+			stroke-dashoffset: -66;
+		}
+	}
+	@keyframes steam-right {
+		from,
+		50% {
+			stroke-dashoffset: 35;
+		}
+		75%,
+		to {
+			stroke-dashoffset: -76;
+		}
+	}
+</style>

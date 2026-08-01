@@ -1,0 +1,285 @@
+---
+import { readdir } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+// 未来把图片放进 public/images/gallery/ 目录，相册会自动展示
+const SUPPORTED_EXT = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+let imageList: { src: string; name: string }[] = [];
+try {
+	const currentDir = path.dirname(fileURLToPath(import.meta.url));
+	const galleryDir = path.resolve(currentDir, '../../public/images/gallery');
+	const files = await readdir(galleryDir);
+	imageList = files
+		.filter((f) => SUPPORTED_EXT.includes(path.extname(f).toLowerCase()))
+		.map((f) => ({ src: `/images/gallery/${f}`, name: f }))
+		.sort((a, b) => b.name.localeCompare(a.name));
+} catch {
+	// 目录不存在时保持空列表
+}
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`相册 · ${SITE_TITLE}`} description="天工开帧的图片相册" />
+	</head>
+	<body>
+		<Header />
+		<!-- 电光边框的湍流位移滤镜 -->
+		<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+			<defs>
+				<filter id="turbulent-displace">
+					<feTurbulence
+						type="fractalNoise"
+						baseFrequency="0.04"
+						numOctaves="3"
+						seed="2"
+						stitchTiles="stitch"
+						result="noise"
+					/>
+					<feDisplacementMap
+						in="SourceGraphic"
+						in2="noise"
+						scale="10"
+						xChannelSelector="R"
+						yChannelSelector="G"
+					/>
+				</filter>
+			</defs>
+		</svg>
+		<main class="gallery-page">
+			<section class="gallery-head">
+				<p class="gallery-eyebrow">GALLERY</p>
+				<h1>相册</h1>
+				<p class="gallery-sub">一些随手拍下的瞬间，和做过的动画截图。</p>
+			</section>
+
+			{imageList.length > 0 ? (
+				<ul class="gallery-grid">
+					{imageList.map((img, index) => (
+						<li class="gallery-item reveal">
+							<div class="electric-glow" aria-hidden="true"></div>
+							<div class="electric-border" aria-hidden="true"></div>
+							<a href={img.src} target="_blank" rel="noopener noreferrer">
+								<img
+									src={img.src}
+									alt={img.name.replace(/\.[^.]+$/, '')}
+									loading="lazy"
+									decoding="async"
+								/>
+							</a>
+							<span class="gallery-count">{String(index + 1).padStart(2, '0')}</span>
+						</li>
+					))}
+				</ul>
+			) : (
+				<div class="gallery-empty">
+					<p>相册还是空的 🌱</p>
+					<p class="gallery-empty-sub">把图片放进 <code>public/images/gallery/</code> 目录，它们就会自动出现在这里。</p>
+				</div>
+			)}
+		</main>
+		<Footer />
+		<script>
+			const targets = document.querySelectorAll('.reveal');
+			targets.forEach((t) => t.classList.add('is-visible'));
+			const observer =
+				'IntersectionObserver' in window
+					? new IntersectionObserver(
+							(entries) => {
+								entries.forEach((entry) => {
+									if (entry.isIntersecting) {
+										entry.target.classList.add('is-visible');
+										observer.unobserve(entry.target);
+									}
+								});
+							},
+							{ threshold: 0.12 },
+						)
+					: null;
+			targets.forEach((t) => observer?.observe(t));
+		</script>
+	</body>
+	<style>
+		main.gallery-page {
+			width: min(1120px, calc(100% - 2em));
+			max-width: 100%;
+			margin: 0 auto;
+			padding: 0 0 4em;
+		}
+		.gallery-head {
+			padding: clamp(3rem, 8vh, 5.5rem) 0 2.5rem;
+			border-bottom: 1px solid var(--border);
+			text-align: center;
+		}
+		.gallery-eyebrow {
+			margin: 0 0 1rem;
+			font-size: 0.8rem;
+			letter-spacing: 0.28em;
+			text-transform: uppercase;
+			color: var(--accent);
+		}
+		.gallery-head h1 {
+			margin: 0;
+			font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+			line-height: 1.05;
+			letter-spacing: -0.02em;
+		}
+		.gallery-sub {
+			margin: 1.2rem 0 0;
+			font-size: 1.05rem;
+			color: #6b5638;
+		}
+
+		.gallery-grid {
+			list-style: none;
+			margin: 2.5rem 0 0;
+			padding: 0;
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+			gap: 1.2rem;
+		}
+		.gallery-item {
+			position: relative;
+			border-radius: 14px;
+			overflow: hidden;
+			border: 1px solid var(--border);
+			background: rgba(222, 212, 188, 0.4);
+			aspect-ratio: 1 / 1;
+		}
+		.gallery-item a {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+		/* 相册项不用全局 glow 描边（由电光边框接管） */
+		.gallery-item a::before {
+			content: none;
+		}
+		.gallery-item img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+			border: none;
+			border-radius: 0;
+			box-shadow: none;
+			transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+		}
+		.gallery-item:hover img {
+			transform: scale(1.05);
+		}
+
+		/* ===== 电光边框（悬停触发） ===== */
+		.electric-border,
+		.electric-glow {
+			position: absolute;
+			inset: 0;
+			border-radius: 14px;
+			pointer-events: none;
+			opacity: 0;
+			transition: opacity 320ms ease;
+			z-index: 2;
+		}
+		.electric-border {
+			border: 2px solid rgba(161, 92, 44, 0.9);
+			filter: url(#turbulent-displace);
+		}
+		.electric-border::before {
+			content: '';
+			position: absolute;
+			inset: -4px;
+			border: 2px solid rgba(233, 196, 106, 0.6);
+			border-radius: inherit;
+			filter: blur(3px);
+		}
+		.electric-border::after {
+			content: '';
+			position: absolute;
+			inset: -6px;
+			border: 1px solid rgba(161, 92, 44, 0.45);
+			border-radius: inherit;
+			filter: url(#turbulent-displace) blur(6px);
+		}
+		.electric-glow {
+			background: linear-gradient(
+				-30deg,
+				rgba(233, 196, 106, 0.5),
+				transparent 35%,
+				transparent 65%,
+				rgba(161, 92, 44, 0.5)
+			);
+			mix-blend-mode: overlay;
+			filter: blur(8px);
+			transform: scale(1.05);
+		}
+		.gallery-item:hover .electric-border,
+		.gallery-item:hover .electric-glow {
+			opacity: 1;
+		}
+		.gallery-item:hover {
+			box-shadow:
+				0 0 24px rgba(161, 92, 44, 0.4),
+				0 0 48px rgba(233, 196, 106, 0.18);
+		}
+		.gallery-count {
+			z-index: 3;
+			position: absolute;
+			top: 0.6rem;
+			left: 0.7rem;
+			font-size: 0.72rem;
+			letter-spacing: 0.12em;
+			color: rgba(255, 248, 234, 0.9);
+			background: rgba(45, 35, 26, 0.55);
+			padding: 0.15em 0.5em;
+			border-radius: 999px;
+			backdrop-filter: blur(4px);
+		}
+
+		.gallery-empty {
+			margin: 3rem auto 0;
+			max-width: 420px;
+			text-align: center;
+			padding: 3rem 1.5rem;
+			border: 1px dashed var(--border);
+			border-radius: 16px;
+			color: #6b5638;
+		}
+		.gallery-empty p {
+			margin: 0 0 0.6rem;
+			font-size: 1.15rem;
+		}
+		.gallery-empty-sub {
+			font-size: 0.92rem !important;
+			color: #8a7a5f;
+		}
+		.gallery-empty code {
+			background: rgba(161, 92, 44, 0.14);
+			color: #6b3c18;
+			padding: 2px 6px;
+			border-radius: 6px;
+		}
+
+		.reveal {
+			opacity: 0;
+			transform: translateY(18px);
+			transition: opacity 700ms ease, transform 700ms ease;
+		}
+		.reveal.is-visible {
+			opacity: 1;
+			transform: translateY(0);
+		}
+
+		@media (max-width: 720px) {
+			.gallery-grid {
+				grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+				gap: 0.8rem;
+			}
+		}
+	</style>
+</html>

@@ -5,16 +5,17 @@
  */
 
 :root {
-	--accent: #5ee7df;
-	--accent-strong: #2dd4bf;
-	--accent-dark: #0f172a;
-	--black: 15, 18, 25;
-	--gray: 120, 132, 158;
-	--gray-light: 24, 31, 46;
-	--gray-dark: 238, 243, 248;
-	--gray-gradient: rgba(10, 14, 26, 0.95), rgba(17, 24, 39, 0.98);
-	--box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
-	--border: rgba(255, 255, 255, 0.08);
+	/* 旧报纸 · 温暖米黄主题 */
+	--accent: #a15c2c;
+	--accent-strong: #7c3d14;
+	--accent-dark: #f4ecdc;
+	--black: 60, 48, 32;
+	--gray: 138, 122, 97;
+	--gray-light: 250, 244, 228;
+	--gray-dark: 61, 48, 32;
+	--gray-gradient: rgba(250, 244, 228, 0.95), rgba(244, 236, 220, 0.98);
+	--box-shadow: 0 10px 30px rgba(90, 60, 30, 0.16);
+	--border: rgba(96, 66, 36, 0.22);
 	--font-body: 'Inter', 'Segoe UI', sans-serif;
 	--font-heading: 'IBM Plex Serif', 'Noto Serif', Georgia, serif;
 	--transition-base: 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -28,8 +29,9 @@ body {
 	padding: 0;
 	text-align: left;
 	background:
-		radial-gradient(circle at top left, rgba(94, 231, 223, 0.2), transparent 28%),
-		linear-gradient(135deg, rgba(10, 14, 26, 0.98), rgba(15, 23, 42, 0.98));
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.09'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+		radial-gradient(circle at top left, rgba(214, 196, 160, 0.4), transparent 32%),
+		linear-gradient(160deg, #d8cdb4 0%, #c9bd9f 55%, #bcae8d 100%);
 	background-attachment: fixed;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
@@ -50,7 +52,7 @@ h4,
 h5,
 h6 {
 	margin: 0 0 0.6rem 0;
-	color: #f8fafc;
+	color: #3d2f1e;
 	line-height: 1.2;
 	font-family: var(--font-heading);
 	letter-spacing: -0.01em;
@@ -81,6 +83,59 @@ a {
 }
 a:hover {
 	color: var(--accent-strong);
+}
+
+/* ---------- Glow 光效：所有可点击元素（链接 / 按钮 / 卡片） ---------- */
+a,
+button,
+a:focus-visible,
+button:focus-visible {
+	position: relative;
+}
+a::before,
+button::before {
+	content: '';
+	pointer-events: none;
+	position: absolute;
+	inset: 2px;
+	border-radius: 10px;
+	border: 1.5px solid transparent;
+	opacity: 0;
+	transition: opacity 260ms ease;
+	background:
+		linear-gradient(90deg, transparent 0%, var(--accent) 40%, #e9c46a 50%, var(--accent) 60%, transparent 100%) border-box;
+	-webkit-mask:
+		linear-gradient(#fff 0 0) padding-box,
+		linear-gradient(#fff 0 0);
+	-webkit-mask-composite: xor;
+	mask:
+		linear-gradient(#fff 0 0) padding-box,
+		linear-gradient(#fff 0 0);
+	mask-composite: exclude;
+	background-size: 220% 100%;
+	animation: glow-sweep 1.6s linear infinite;
+}
+a:hover::before,
+a:focus-visible::before,
+button:hover::before,
+button:focus-visible::before {
+	opacity: 0.85;
+}
+
+/* 窄元素（纯文字链接如导航项）不套描边，避免喧宾夺主 */
+h2 a::before,
+nav a::before,
+.toc-link::before {
+	content: none;
+}
+
+@keyframes glow-sweep {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -20% 0;
+	}
 }
 img,
 a,
@@ -130,8 +185,8 @@ img {
 }
 code {
 	padding: 2px 6px;
-	background: rgba(94, 231, 223, 0.15);
-	color: #d6f7f4;
+	background: rgba(161, 92, 44, 0.14);
+	color: #6b3c18;
 	border-radius: 6px;
 }
 pre {
@@ -139,21 +194,22 @@ pre {
 	padding: 1.4em 1.5em;
 	border-radius: 14px;
 	background:
-		linear-gradient(rgba(2, 6, 23, 0.72), rgba(2, 6, 23, 0.72)),
-		repeating-linear-gradient(0deg, transparent 0 31px, rgba(94, 231, 223, 0.05) 31px 32px);
-	border: 1px solid rgba(94, 231, 223, 0.16);
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 12px 32px rgba(2, 6, 23, 0.35);
+		linear-gradient(rgba(45, 35, 26, 0.97), rgba(45, 35, 26, 0.97)),
+		repeating-linear-gradient(0deg, transparent 0 31px, rgba(240, 230, 210, 0.06) 31px 32px);
+	border: 1px solid rgba(240, 230, 210, 0.14);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 12px 32px rgba(90, 60, 30, 0.22);
 	overflow-x: auto;
 }
 pre > code {
 	all: unset;
+	color: #f0e6d2;
 }
 blockquote {
 	border-left: 3px solid var(--accent);
 	padding: 0 0 0 18px;
 	margin: 1.3em 0;
 	font-size: 1.05em;
-	color: #cbd5e1;
+	color: #6b5638;
 }
 hr {
 	border: none;

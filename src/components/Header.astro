@@ -9,13 +9,8 @@ import HeaderLink from './HeaderLink.astro';
 		<div class="internal-links">
 			<HeaderLink href="/">首页</HeaderLink>
 			<HeaderLink href="/blog">教程列表</HeaderLink>
+			<HeaderLink href="/gallery">相册</HeaderLink>
 			<HeaderLink href="/about">关于</HeaderLink>
-			<!-- 后台入口仅保留在本地开发环境（本机可访问），不会被推送到公网 -->
-			{
-				import.meta.env.DEV && (
-					<a href="http://localhost:4322/admin" target="_blank" rel="noopener noreferrer">后台</a>
-				)
-			}
 		</div>
 	</nav>
 </header>
@@ -24,8 +19,8 @@ import HeaderLink from './HeaderLink.astro';
 		margin: 0;
 		padding: 1rem 1.4rem;
 		backdrop-filter: blur(16px);
-		background: rgba(2, 6, 23, 0.72);
-		border-bottom: 1px solid rgba(255,255,255,0.08);
+		background: rgba(216, 205, 180, 0.82);
+		border-bottom: 1px solid rgba(96, 66, 36, 0.3);
 		position: sticky;
 		top: 0;
 		z-index: 20;
@@ -39,7 +34,7 @@ import HeaderLink from './HeaderLink.astro';
 	h2 a,
 	h2 a.active {
 		text-decoration: none;
-		color: #f8fafc;
+		color: #3d2f1e;
 	}
 	nav {
 		display: flex;
@@ -50,7 +45,7 @@ import HeaderLink from './HeaderLink.astro';
 	}
 	nav a {
 		padding: 0.7em 0.9em;
-		color: #cbd5e1;
+		color: #6b5638;
 		border-bottom: 2px solid transparent;
 		text-decoration: none;
 		font-size: 0.96rem;
@@ -59,7 +54,7 @@ import HeaderLink from './HeaderLink.astro';
 	nav a:hover,
 	nav a.active {
 		text-decoration: none;
-		color: #f8fafc;
+		color: #3d2f1e;
 		border-bottom-color: var(--accent);
 	}
 	.internal-links {

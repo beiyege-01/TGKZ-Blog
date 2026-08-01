@@ -94,7 +94,7 @@ const posts = (await getCollection('blog')).sort(
 		.index-sub {
 			margin: 1.2rem 0 0;
 			font-size: 1.05rem;
-			color: #cbd5e1;
+			color: #6b5638;
 		}
 		.post-list {
 			list-style: none;
@@ -103,6 +103,9 @@ const posts = (await getCollection('blog')).sort(
 		}
 		.post-item {
 			border-bottom: 1px solid var(--border);
+		}
+		.post-item a::before {
+			inset: 16px 48px;
 		}
 		.post-item a {
 			display: grid;
@@ -117,7 +120,7 @@ const posts = (await getCollection('blog')).sort(
 		.post-index {
 			font-size: 0.9rem;
 			font-variant-numeric: tabular-nums;
-			color: #64748b;
+			color: #a08b68;
 			transition: color 220ms ease;
 		}
 		.post-title {
@@ -125,22 +128,22 @@ const posts = (await getCollection('blog')).sort(
 			font-size: clamp(1.1rem, 2vw, 1.45rem);
 			font-weight: 600;
 			line-height: 1.3;
-			color: #f8fafc;
+			color: #3d2f1e;
 			transition: color 220ms ease, transform 260ms ease;
 		}
 		.post-date {
 			margin: 0 0 0.35rem;
 			font-size: 0.85rem;
-			color: #64748b;
+			color: #a08b68;
 		}
 		.post-desc {
 			margin: 0;
 			font-size: 0.97rem;
-			color: #94a3b8;
+			color: #8a7a5f;
 		}
 		.post-arrow {
 			font-size: 1.4rem;
-			color: #64748b;
+			color: #a08b68;
 			opacity: 0;
 			transform: translateX(-8px);
 			transition: opacity 240ms ease, transform 240ms ease, color 240ms ease;
