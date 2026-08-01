@@ -1,18 +1,17 @@
 ---
 import { readdir } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 // 未来把图片放进 public/images/gallery/ 目录，相册会自动展示
+// 用 process.cwd()（始终指向项目根目录，dev 和 build 都可靠）
 const SUPPORTED_EXT = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
 let imageList: { src: string; name: string }[] = [];
 try {
-	const currentDir = path.dirname(fileURLToPath(import.meta.url));
-	const galleryDir = path.resolve(currentDir, '../../public/images/gallery');
+	const galleryDir = path.resolve(process.cwd(), 'public/images/gallery');
 	const files = await readdir(galleryDir);
 	imageList = files
 		.filter((f) => SUPPORTED_EXT.includes(path.extname(f).toLowerCase()))
