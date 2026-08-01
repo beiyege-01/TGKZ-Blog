@@ -146,27 +146,37 @@ try {
 		.gallery-item {
 			position: relative;
 			border-radius: 14px;
-			overflow: hidden;
-			border: 1px solid var(--border);
 			background: rgba(222, 212, 188, 0.4);
 			aspect-ratio: 1 / 1;
+			/* 柔和投影：模拟图片投在旧报纸上的阴影，置于图片底层 */
+			box-shadow:
+				0 6px 18px rgba(90, 60, 30, 0.22),
+				0 2px 6px rgba(90, 60, 30, 0.14);
+			transition: box-shadow 420ms ease;
+		}
+		.gallery-item:hover {
+			box-shadow:
+				0 12px 28px rgba(90, 60, 30, 0.3),
+				0 4px 10px rgba(90, 60, 30, 0.18);
+		}
+		/* 参考代码的悬停位移效果：去掉所有描边线条，只保留图片移动 */
+		.gallery-item::before {
+			content: none;
 		}
 		.gallery-item a {
 			display: block;
 			width: 100%;
 			height: 100%;
+			position: relative;
+			z-index: 1;
+			border-radius: 14px;
+			overflow: hidden;
 		}
 		/* 相册项不用全局 glow 描边（由电光边框接管） */
 		.gallery-item a::before {
 			content: none;
 		}
 		.gallery-item img {
-			/* ===== Offset 断边描边（参考代码，适配旧报纸主题） ===== */
-			--c: rgba(161, 92, 44, 0.65); /* 主色：赭石 */
-			--b: 3px; /* 描边粗细 */
-			--o: 14px; /* 描边与图片的距离 */
-			--_p: calc(2 * var(--o) + var(--b));
-
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
@@ -174,21 +184,13 @@ try {
 			border: none;
 			border-radius: 0;
 			box-shadow: none;
-			box-sizing: border-box;
-			padding: var(--_p) var(--_p) 0 0;
-			outline: var(--b) solid var(--c);
-			outline-offset: calc(var(--o) - var(--_p));
-			transition:
-				padding 420ms cubic-bezier(0.2, 0.8, 0.2, 1),
-				outline-offset 420ms cubic-bezier(0.2, 0.8, 0.2, 1),
-				outline-color 420ms ease,
-				filter 420ms ease;
+			transform: translate(8px, 8px) scale(1.06);
+			transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
 			cursor: pointer;
 		}
 		.gallery-item:hover img {
-			padding: calc(var(--_p) / 2);
-			outline-offset: calc(var(--o) / 2 - var(--_p) / 2);
-			outline-color: rgba(233, 196, 106, 0.8);
+			/* 参考代码：悬停时图片向回移动 */
+			transform: translate(0, 0) scale(1.06);
 		}
 
 		/* ===== 电光边框（悬停触发） ===== */
