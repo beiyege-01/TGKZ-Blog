@@ -3,7 +3,7 @@ title: '如何开启 GitHub 各大宝藏项目基础课（以某分支 llama.cpp
 description: '以 llama.cpp 分支为例，介绍如何从 GitHub 中发现、克隆、编译并运行一个宝藏项目。'
 pubDate: '2026-08-01'
 updatedDate: '2026-08-01'
-heroImage: '../../assets/blog-placeholder-1.jpg'
+heroImage: '../../assets/cover-qima3.jpg'
 ---
 
 > 前言：示例的是群主用的某个 llama.cpp 分支：TheTom/llama-cpp-turboquant。它的主要好处是可以极致压缩大模型的 KV 缓存。显存充裕，或者 CUDA 版本和项目方推荐一致时，可以下载预编译版本；主分支的预编译版本也通常是最丰富的。

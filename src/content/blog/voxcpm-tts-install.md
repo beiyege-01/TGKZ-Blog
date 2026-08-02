@@ -3,7 +3,7 @@ title: '示例 VoxCPM TTS 安装——小雅的声音设计'
 description: '按原始教程整理的 VoxCPM 安装、模型测试与 Web 界面启动流程。'
 pubDate: '2026-08-01'
 updatedDate: '2026-08-01'
-heroImage: '../../assets/blog-placeholder-3.jpg'
+heroImage: '../../assets/cover-sizay.jpg'
 ---
 
 [快速入门 - VoxCPM 2.0 文档](https://voxcpm.readthedocs.io/en/latest/quickstart.html)

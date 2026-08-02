@@ -3,7 +3,7 @@ title: 'Speech 项目安装（集成 TTS 和 STT）'
 description: '按原始教程整理的语音项目安装、CUDA 配置与启动流程。'
 pubDate: '2026-08-01'
 updatedDate: '2026-08-01'
-heroImage: '../../assets/blog-placeholder-2.jpg'
+heroImage: '../../assets/cover-qima2.jpg'
 ---
 
 > 前言：环境准备 FFmpeg、CUDA（都需要添加到 PATH）。
