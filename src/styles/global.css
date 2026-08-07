@@ -21,6 +21,8 @@
 }
 html {
 	scroll-behavior: smooth;
+	/* 固定为浅色模式，防止手机浏览器 PC 模式强制暗色把文字反白 */
+	color-scheme: light;
 }
 body {
 	font-family: var(--font-body);
