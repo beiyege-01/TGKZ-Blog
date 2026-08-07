@@ -5,10 +5,21 @@ import HeaderLink from './HeaderLink.astro';
 
 <header>
 	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<h2>
+			<a href="/">
+				{SITE_TITLE}
+				<img
+					class="header-logo"
+					src="/images/header-logo.png"
+					alt=""
+					loading="lazy"
+					decoding="async"
+				/>
+			</a>
+		</h2>
 		<div class="internal-links">
 			<HeaderLink href="/">首页</HeaderLink>
-			<HeaderLink href="/blog">教程列表</HeaderLink>
+			<HeaderLink href="/blog">文章列表</HeaderLink>
 			<HeaderLink href="/gallery">相册</HeaderLink>
 			<HeaderLink href="/about">关于</HeaderLink>
 		</div>
@@ -35,6 +46,18 @@ import HeaderLink from './HeaderLink.astro';
 	h2 a.active {
 		text-decoration: none;
 		color: #3d2f1e;
+	}
+	/* 标题后的小图标 */
+	.header-logo {
+		display: inline-block;
+		vertical-align: middle;
+		width: 22px;
+		height: auto;
+		margin-left: 6px;
+		opacity: 0.75;
+		border: none; /* 覆盖全局 img 边框 */
+		box-shadow: none; /* 覆盖全局 img 阴影 */
+		border-radius: 0;
 	}
 	nav {
 		display: flex;

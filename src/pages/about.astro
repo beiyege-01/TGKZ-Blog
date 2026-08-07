@@ -8,6 +8,14 @@ import Layout from '../layouts/BlogPost.astro';
 	pubDate={new Date('August 08 2021')}
 	heroVideo="/videos/wan2.2_00003.mp4"
 >
+	<img
+		slot="title-deco"
+		class="about-title-deco"
+		src="/images/about-title-deco.png"
+		alt=""
+		loading="lazy"
+		decoding="async"
+	/>
 	<div class="about-intro">
 		<p class="about-hello">你好呀，我是天工开帧。</p>
 		<p class="about-line">一个兴趣使然的 AI 动画师，</p>
@@ -66,6 +74,19 @@ import Layout from '../layouts/BlogPost.astro';
 </Layout>
 
 <style>
+	/* ===== 关于页：标题右侧的小剪影 ===== */
+	.about-title-deco {
+		display: inline-block;
+		vertical-align: middle;
+		width: 44px;
+		height: auto;
+		margin-left: 10px;
+		opacity: 0.7;
+		border: none; /* 覆盖全局 img 边框 */
+		box-shadow: none; /* 覆盖全局 img 阴影 */
+		border-radius: 0;
+	}
+
 	/* ===== 关于页：自我介绍（居中排版） ===== */
 	:global(.prose) {
 		text-align: center;

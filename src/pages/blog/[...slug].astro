@@ -31,5 +31,38 @@ const recommendedPosts = posts
 ---
 
 <BlogPost {...post.data} headings={headings} recommendedPosts={recommendedPosts}>
+	<!-- 文章页左下角剪影装饰（渲染在 body 层） -->
+	<div slot="decorations" class="post-deco" aria-hidden="true">
+		<img src="/images/blog-deco.png" alt="" loading="lazy" decoding="async" />
+	</div>
 	<Content />
 </BlogPost>
+
+<style>
+	/* 文章页左下角剪影 */
+	.post-deco {
+		position: fixed;
+		bottom: 2vh;
+		left: 0;
+		width: min(280px, 32vw);
+		pointer-events: none;
+		z-index: 1;
+		opacity: 0.45;
+		-webkit-mask-image: radial-gradient(ellipse 85% 80% at 32% 78%, #000 35%, transparent 96%);
+		mask-image: radial-gradient(ellipse 85% 80% at 32% 78%, #000 35%, transparent 96%);
+	}
+	.post-deco img {
+		display: block;
+		width: 100%;
+		height: auto;
+		filter: blur(0.8px);
+		border: none;
+		box-shadow: none;
+		border-radius: 0;
+	}
+	@media (max-width: 720px) {
+		.post-deco {
+			width: 30vw;
+		}
+	}
+</style>

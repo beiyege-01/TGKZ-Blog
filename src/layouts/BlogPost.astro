@@ -305,8 +305,9 @@ const { title, description, pubDate, updatedDate, heroImage, heroVideo, headings
 									)
 								}
 							</div>
-							<h1>
+							<h1 class="post-title-heading">
 								<SplitText as="span" text={title} />
+								<slot name="title-deco" />
 							</h1>
 							<hr />
 						</div>
@@ -328,6 +329,8 @@ const { title, description, pubDate, updatedDate, heroImage, heroVideo, headings
 				</div>
 			</article>
 		</main>
+		{/* 装饰元素：渲染在 body 直接子级（避免 transform 祖先影响 fixed 定位） */}
+		<slot name="decorations" />
 		<Footer />
 		<script>
 			const revealTargets = document.querySelectorAll('.reveal');

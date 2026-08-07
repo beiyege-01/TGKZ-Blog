@@ -15,14 +15,23 @@ const posts = (await getCollection('blog')).sort(
 <!doctype html>
 <html lang="zh-CN">
 	<head>
-		<BaseHead title={`教程列表 · ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+		<BaseHead title={`文章列表 · ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 	</head>
 	<body>
 		<Header />
 		<main class="blog-index">
 			<section class="index-head">
-				<p class="index-eyebrow">TUTORIALS</p>
-				<h1>教程列表</h1>
+				<p class="index-eyebrow">
+					ARTICLES
+					<img
+						class="index-deco"
+						src="/images/blog-title-deco.png"
+						alt=""
+						loading="lazy"
+						decoding="async"
+					/>
+				</p>
+				<h1 class="index-title">文章列表</h1>
 				<p class="index-sub">按顺序跟着做，一步步把环境跑起来。</p>
 			</section>
 
@@ -84,12 +93,27 @@ const posts = (await getCollection('blog')).sort(
 			letter-spacing: 0.28em;
 			text-transform: uppercase;
 			color: var(--accent);
+			position: relative;
+			display: inline-block;
 		}
 		.index-head h1 {
 			margin: 0;
 			font-size: clamp(2.2rem, 5.5vw, 3.6rem);
 			line-height: 1.05;
 			letter-spacing: -0.02em;
+		}
+		/* 眉标顶部的角标图标：位于 ARTICLES 文字顶部 */
+		.index-deco {
+			position: absolute;
+			top: -16px;
+			right: -30px;
+			width: 34px;
+			height: auto;
+			opacity: 0.7;
+			transform: rotate(8deg);
+			border: none; /* 覆盖全局 img 边框 */
+			box-shadow: none; /* 覆盖全局 img 阴影 */
+			border-radius: 0;
 		}
 		.index-sub {
 			margin: 1.2rem 0 0;

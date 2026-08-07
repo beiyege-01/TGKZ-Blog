@@ -1,0 +1,69 @@
+---
+// 鸟剪影组件：悬停「天工开帧」标题时，鸟从顶部中间飞向左侧
+// 图片使用 PNG
+---
+
+<!-- 顶部鸟剪影：悬停「天工开帧」时飞过（JS 添加 is-flying 触发） -->
+<div class="bird-fly" id="bird-fly" aria-hidden="true">
+<img src="/images/bird-shadow.png" alt="" loading="lazy" decoding="async" />
+</div>
+
+<style>
+/* ===== 顶部鸟剪影（默认隐藏，悬停触发后飞过） ===== */
+.bird-fly {
+position: fixed;
+top: 0;
+left: 0;
+width: min(180px, 26vw);
+pointer-events: none;
+z-index: 1;
+opacity: 0;
+}
+.bird-fly img {
+display: block;
+width: 100%;
+height: auto;
+filter: blur(0.5px);
+border: none; /* 覆盖全局 img 边框 */
+box-shadow: none; /* 覆盖全局 img 阴影 */
+border-radius: 0;
+}
+/* 触发飞行：JS 添加该类后播放，只一次 */
+/* 线性缓动 + 均匀位移分段：速度恒定，无停顿 */
+.bird-fly.is-flying {
+animation: bird-fly-across 1.4s linear 0s 1 forwards;
+}
+
+/* 起点：顶部中间（50vw）；终点：左侧屏幕外（-60vw）
+   每段位移量一致（27.5vw），速度真正均匀
+   放大至 400%；透明度逐渐明显，飞出屏幕后才消失 */
+@keyframes bird-fly-across {
+0% {
+transform: translate(calc(50vw - 90px), 6vh) scale(1) rotate(2deg);
+opacity: 0.1;
+}
+25% {
+transform: translate(calc(22.5vw - 90px), 22vh) scale(2) rotate(-1deg);
+opacity: 0.4;
+}
+50% {
+transform: translate(calc(-5vw - 90px), 38vh) scale(3) rotate(-2deg);
+opacity: 0.65;
+}
+75% {
+transform: translate(calc(-32.5vw - 90px), 47vh) scale(3.7) rotate(-3deg);
+opacity: 0.9;
+}
+100% {
+transform: translate(calc(-60vw - 90px), 50vh) scale(4) rotate(-4deg);
+opacity: 0;
+}
+}
+
+/* 移动端：鸟缩小 */
+@media (max-width: 720px) {
+.bird-fly {
+width: 24vw;
+}
+}
+</style>

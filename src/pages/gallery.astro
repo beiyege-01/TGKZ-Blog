@@ -54,7 +54,16 @@ try {
 		<main class="gallery-page">
 			<section class="gallery-head">
 				<p class="gallery-eyebrow">GALLERY</p>
-				<h1>相册</h1>
+				<h1 class="gallery-title">
+					相册
+					<img
+						class="gallery-deco"
+						src="/images/gallery-deco.png"
+						alt=""
+						loading="lazy"
+						decoding="async"
+					/>
+				</h1>
 				<p class="gallery-sub">一些随手拍下的瞬间，和做过的动画截图。</p>
 			</section>
 
@@ -129,10 +138,28 @@ try {
 			line-height: 1.05;
 			letter-spacing: -0.02em;
 		}
+		/* 标题容器：相对定位，供图标重叠 */
+		.gallery-title {
+			position: relative;
+			display: inline-block;
+		}
 		.gallery-sub {
 			margin: 1.2rem 0 0;
 			font-size: 1.05rem;
 			color: #6b5638;
+		}
+		/* 标题顶部的角标图标：与「相册」二字顶部重叠 */
+		.gallery-deco {
+			position: absolute;
+			top: -18px;
+			right: -4px;
+			width: 40px;
+			height: auto;
+			opacity: 0.7;
+			transform: rotate(8deg);
+			border: none; /* 覆盖全局 img 边框 */
+			box-shadow: none; /* 覆盖全局 img 阴影 */
+			border-radius: 0;
 		}
 
 		.gallery-grid {

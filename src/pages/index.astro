@@ -4,6 +4,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import SplitText from '../components/SplitText.astro';
+import TreeShadow from '../components/TreeShadow.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 const posts = (await getCollection('blog')).sort(
@@ -18,6 +19,7 @@ const posts = (await getCollection('blog')).sort(
 	</head>
 	<body>
 		<Header />
+		<TreeShadow />
 		<main class="home">
 			<section class="hero">
 				<p class="hero-eyebrow">教程 · 实战 · 本地 AI</p>
@@ -62,9 +64,18 @@ const posts = (await getCollection('blog')).sort(
 
 			<section class="closing reveal">
 				<p class="closing-label">FOR YOUR NEXT BUILD</p>
-				<a class="closing-cta" href="/about">
-					关于这个博客 <span class="arrow">→</span>
-				</a>
+				<div class="closing-row">
+					<img
+						class="closing-deco"
+						src="/images/about-deco.png"
+						alt=""
+						loading="lazy"
+						decoding="async"
+					/>
+					<a class="closing-cta" href="/about">
+						关于这个博客 <span class="arrow">→</span>
+					</a>
+				</div>
 			</section>
 		</main>
 		<Footer />
@@ -86,6 +97,17 @@ const posts = (await getCollection('blog')).sort(
 						)
 					: null;
 			targets.forEach((t) => observer?.observe(t));
+
+			// 彩蛋：鼠标悬停「天工开帧」标题时，触发鸟剪影飞过（只触发一次）
+			const bird = document.getElementById('bird-fly');
+			const heroTitle = document.querySelector('.hero-title');
+			if (bird && heroTitle) {
+				heroTitle.addEventListener('mouseenter', () => {
+					if (!bird.classList.contains('is-flying')) {
+						bird.classList.add('is-flying');
+					}
+				});
+			}
 		</script>
 	</body>
 	<style>
@@ -255,6 +277,20 @@ const posts = (await getCollection('blog')).sort(
 			letter-spacing: 0.28em;
 			text-transform: uppercase;
 			color: #a08b68;
+		}
+		/* 「关于这个博客」左侧的小剪影 */
+		.closing-row {
+			display: inline-flex;
+			align-items: center;
+			gap: 14px;
+		}
+		.closing-deco {
+			width: 30px;
+			height: auto;
+			opacity: 0.65;
+			border: none; /* 覆盖全局 img 边框 */
+			box-shadow: none; /* 覆盖全局 img 阴影 */
+			border-radius: 0;
 		}
 		.closing-cta {
 			font-size: clamp(1.3rem, 3vw, 2rem);
