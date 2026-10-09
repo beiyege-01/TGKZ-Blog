@@ -39,8 +39,32 @@ import Layout from '../layouts/BlogPost.astro';
 	<p class="about-coffee-invite">当然，如果你愿意的话，也可以请我喝杯咖啡 ☕</p>
 
 	<div class="about-qrcode">
-		<img src="/images/qrcode.jpg" alt="请我喝咖啡" width="260" height="260" loading="lazy" />
+		<a
+			class="qr-item"
+			href="/images/qrcode.jpg"
+			target="_blank"
+			rel="noopener noreferrer"
+			title="点击查看大图"
+		>
+			<img src="/images/qrcode.jpg" alt="微信支付收款码" width="260" height="260" loading="lazy" />
+			<span>微信支付</span>
+		</a>
+		<a
+			class="qr-item"
+			href="/images/qrcode-okx.jpg"
+			target="_blank"
+			rel="noopener noreferrer"
+			title="点击查看大图"
+		>
+			<img
+				src="/images/qrcode-okx.jpg"
+				alt="OKX Wallet 收款码(USDG · X Layer)"
+				loading="lazy"
+			/>
+			<span>OKX Wallet</span>
+		</a>
 	</div>
+	<p class="qr-hint">扫码即可(点图可看大图)</p>
 
 	<div class="coffee" aria-hidden="true">
 		<div class="coffee__cup">
@@ -119,18 +143,43 @@ import Layout from '../layouts/BlogPost.astro';
 	}
 	.about-qrcode {
 		margin: 1.6em 0 0;
+		display: flex;
+		justify-content: center;
+		gap: 34px;
+		flex-wrap: wrap;
 	}
-	.about-qrcode img {
-		width: clamp(180px, 40vw, 260px);
+	/* 两个码等高方框 + contain(白底), 竖版 OKX 码与方版微信码并排不失衡 */
+	.qr-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 9px;
+		text-decoration: none;
+	}
+	.qr-item img {
+		width: clamp(170px, 32vw, 250px);
+		aspect-ratio: 1;
 		height: auto;
+		object-fit: contain;
+		background: #fff;
 		border-radius: 18px;
 		border: 2px solid var(--border);
 		box-shadow: var(--box-shadow);
 		transition: transform 220ms ease, box-shadow 220ms ease;
 	}
-	.about-qrcode img:hover {
+	.qr-item img:hover {
 		transform: translateY(-3px) scale(1.03);
 		box-shadow: 0 16px 36px rgba(90, 60, 30, 0.24);
+	}
+	.qr-item span {
+		font-size: 12.5px;
+		letter-spacing: 0.04em;
+		color: #6b5638;
+	}
+	.qr-hint {
+		margin: 0.8em 0 0;
+		font-size: 12px;
+		color: #8a7a5f;
 	}
 
 	/* ===== 咖啡杯动画（适配旧报纸暖米黄主题） ===== */
