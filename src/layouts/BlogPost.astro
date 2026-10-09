@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import SplitText from '../components/SplitText.astro';
+import CatCompanion from '../components/CatCompanion.astro';
 
 type Heading = {
 	depth: number;
@@ -331,6 +332,8 @@ const { title, description, pubDate, updatedDate, heroImage, heroVideo, headings
 		</main>
 		{/* 装饰元素：渲染在 body 直接子级（避免 transform 祖先影响 fixed 定位） */}
 		<slot name="decorations" />
+		{/* 🐈 彩蛋：Live2D 黑猫 hijiki（复制自口播生成器，阅读文章时陪伴） */}
+		<CatCompanion />
 		<Footer />
 		<script>
 			const revealTargets = document.querySelectorAll('.reveal');

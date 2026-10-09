@@ -1,0 +1,248 @@
+---
+/**
+ * 🐈 彩蛋: Live2D 黑猫 hijiki(复制自口播生成器 koubo-studio 的彩蛋, 2026-10-09)
+ * 原版: 长任务时出现陪伴, 各阶段不同落点, 点猫看「关于」; 本博客版:
+ *       进入文章开始阅读后出现, 按阅读进度换位(左下→右下→右上→左上), 里程碑冒气泡,
+ *       点猫跳转 /about。窄屏(<1360px)不显示, 移动端由引擎 mobile.show:false 关闭。
+ * 素材: /live2d/L2Dwidget.min.js(+0.min.js 分包, publicPath 已补丁为 /live2d/) 与
+ *       /live2d/models/hijiki/* —— 全部惰性加载, 猫不出现就零开销。
+ */
+---
+
+<div id="catHot" title="点我看看作者是谁"></div>
+<div id="catBubble"></div>
+
+<style>
+	/* Live2D 运行时会持续重写 canvas 内联样式(left/opacity/z-index 等),
+	   故定位/显隐/层级一律用带 !important 的类控制, 内联样式永远覆盖不了 */
+	:global(#live2dcanvas) {
+		pointer-events: none !important;
+		z-index: 5 !important;
+		border: none !important;
+		width: 200px !important;
+		height: 260px !important;
+		opacity: 0 !important;
+		visibility: hidden !important;
+		transition: opacity 0.8s;
+	}
+	:global(#live2dcanvas.cat-show) {
+		opacity: 0.9 !important;
+		visibility: visible !important;
+	}
+	:global(#live2dcanvas.cat-lb) { left: 2% !important; right: auto !important; bottom: 0 !important; top: auto !important; }
+	:global(#live2dcanvas.cat-rb) { right: 2% !important; left: auto !important; bottom: 0 !important; top: auto !important; }
+	:global(#live2dcanvas.cat-lt) { left: 2% !important; right: auto !important; top: 16% !important; bottom: auto !important; }
+	:global(#live2dcanvas.cat-rt) { right: 2% !important; left: auto !important; top: 16% !important; bottom: auto !important; }
+
+	/* 点击黑猫热区(不挡其他内容: 仅猫出现时启用, 位置与 canvas 同步) */
+	#catHot {
+		position: fixed;
+		z-index: 6;
+		width: 200px;
+		height: 260px;
+		display: none;
+		cursor: pointer;
+		border-radius: 14px;
+	}
+	#catHot.cat-show { display: block; }
+	#catHot.cat-lb { left: 2%; bottom: 0; }
+	#catHot.cat-rb { right: 2%; bottom: 0; }
+	#catHot.cat-lt { left: 2%; top: 16%; }
+	#catHot.cat-rt { right: 2%; top: 16%; }
+	#catHot::after {
+		content: '点我';
+		position: absolute;
+		left: 50%;
+		bottom: 6px;
+		transform: translateX(-50%);
+		font-size: 11px;
+		color: #f0e6d2;
+		background: rgba(30, 24, 16, 0.86);
+		border: 1px solid rgba(161, 92, 44, 0.55);
+		border-radius: 999px;
+		padding: 2px 10px;
+		opacity: 0;
+		transition: opacity 0.2s;
+	}
+	#catHot:hover::after { opacity: 1; }
+
+	/* 猫气泡(位置类与猫联动): 沿用口播器的深底金边气泡, 融入博客暖色 */
+	#catBubble {
+		position: fixed;
+		z-index: 7;
+		max-width: 270px;
+		padding: 10px 14px;
+		background: #14141a;
+		border: 1px solid #b6a884;
+		border-radius: 12px;
+		color: #e8d9b8;
+		font-size: 13px;
+		line-height: 1.55;
+		box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		transition: opacity 0.35s, transform 0.35s;
+		transform: translateY(8px);
+	}
+	#catBubble.cat-show {
+		opacity: 1;
+		visibility: visible;
+		transform: translateY(0);
+	}
+	#catBubble::after {
+		content: '';
+		position: absolute;
+		bottom: -9px;
+		left: 32px;
+		border: 9px solid transparent;
+		border-top-color: #b6a884;
+		border-bottom: none;
+		border-left-width: 6px;
+		border-right-width: 6px;
+	}
+	#catBubble.cat-lb { left: calc(2% + 168px); bottom: 170px; }
+	#catBubble.cat-rb { right: calc(2% + 168px); bottom: 170px; }
+	#catBubble.cat-rb::after { left: auto; right: 32px; }
+	#catBubble.cat-lt { left: calc(2% + 168px); top: calc(16% + 6px); }
+	#catBubble.cat-rt { right: calc(2% + 168px); top: calc(16% + 6px); }
+	#catBubble.cat-rt::after { left: auto; right: 32px; }
+</style>
+
+<script>
+	// —— 🐈 黑猫陪伴逻辑(移植自 koubo-studio app.py 内嵌前端, 触发源改为「阅读」) ——
+	const CAT_SPOTS: Record<string, string> = {
+		start: 'cat-lb', // 开头: 左下
+		mid: 'cat-rb', // 中段: 右下
+		late: 'cat-rt', // 后段: 右上
+		end: 'cat-lt', // 收尾: 左上
+	};
+	const CAT_CLASSES = ['cat-lb', 'cat-rb', 'cat-lt', 'cat-rt', 'cat-show'];
+	const MODEL_JSON = '/live2d/models/hijiki/hijiki.model.json';
+	const LOADER_SRC = '/live2d/L2Dwidget.min.js';
+	// 气泡台词: 初见 + 过半 + 快读完(每条 3.8s, 与原版节奏一致)
+	const BUBBLE_WELCOME = '喵~ 这篇有点长, 我陪你读完。';
+	const BUBBLE_HALF = '喵, 过半了, 继续继续。';
+	const BUBBLE_NEAR = '快读完啦, 收尾在下面。';
+
+	let catReady = false;
+	let loaderInjected = false;
+	let catShown = false;
+	let stage = '';
+	let catTalking = false;
+
+	function spotFor(p: number): string {
+		if (p >= 0.9) return 'end';
+		if (p >= 0.66) return 'late';
+		if (p >= 0.33) return 'mid';
+		return 'start';
+	}
+
+	function injectLoader() {
+		if (loaderInjected) return;
+		loaderInjected = true;
+		const s = document.createElement('script');
+		s.src = LOADER_SRC;
+		s.async = true;
+		document.head.appendChild(s);
+	}
+
+	function initCat(): boolean {
+		if (catReady) return true;
+		const w = window as unknown as { L2Dwidget?: { init: (o: unknown) => void } };
+		if (typeof w.L2Dwidget === 'undefined') return false;
+		try {
+			w.L2Dwidget.init({
+				model: { jsonPath: MODEL_JSON, scale: 1 },
+				display: { position: 'left', width: 200, height: 260, hOffset: 0, vOffset: 0 },
+				mobile: { show: false, scale: 0.4 },
+				react: { opacityDefault: 1, opacityOnHover: 1 },
+			});
+			catReady = true;
+			return true;
+		} catch (e) {
+			console.warn('黑猫彩蛋初始化失败', e);
+			return false;
+		}
+	}
+
+	function applyClasses(el: HTMLElement, on: boolean, key: string) {
+		CAT_CLASSES.forEach((k) => el.classList.remove(k));
+		if (on) el.classList.add(CAT_SPOTS[key] || 'cat-rb', 'cat-show');
+	}
+
+	function setCat(on: boolean, key: string, retry = 0) {
+		if (on && window.innerWidth < 1360) return; // 窄屏无侧边留白, 不显示免得挡内容
+		const el = document.getElementById('live2dcanvas');
+		if (!el) {
+			// canvas 由引擎异步创建, 未就绪则稍后重试
+			if (on && initCat() && retry < 15) setTimeout(() => setCat(on, key, retry + 1), 300);
+			return;
+		}
+		applyClasses(el, on, key);
+		const hot = document.getElementById('catHot');
+		if (hot) applyClasses(hot, on, key);
+	}
+
+	function catShowBubble(lines: string[], key: string) {
+		if (catTalking || !lines.length) return;
+		const b = document.getElementById('catBubble');
+		if (!b) return;
+		catTalking = true;
+		['cat-rb', 'cat-lb', 'cat-lt', 'cat-rt'].forEach((k) => b.classList.remove(k));
+		b.classList.add(CAT_SPOTS[key] || 'cat-rb');
+		let i = 0;
+		const step = () => {
+			if (i >= lines.length) {
+				setTimeout(() => {
+					b.classList.remove('cat-show');
+					catTalking = false;
+				}, 2600);
+				return;
+			}
+			b.textContent = lines[i++];
+			b.classList.add('cat-show');
+			setTimeout(step, 3800);
+		};
+		step();
+	}
+
+	function onScrollCat() {
+		const doc = document.documentElement;
+		const max = doc.scrollHeight - window.innerHeight;
+		const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+		const key = spotFor(p);
+		if (!catShown) {
+			// 开始阅读(滚动一段或停留后由兜底计时触发): 猫登场
+			catShown = true;
+			injectLoader();
+			setCat(true, key);
+			try {
+				if (!localStorage.getItem('catWelcomed')) {
+					localStorage.setItem('catWelcomed', '1');
+					setTimeout(() => catShowBubble([BUBBLE_WELCOME], key), 1200);
+				}
+			} catch {
+				/* localStorage 不可用就静默 */
+			}
+			stage = key;
+			return;
+		}
+		if (key !== stage) {
+			stage = key;
+			setCat(true, key);
+			if (key === 'mid') catShowBubble([BUBBLE_HALF], key);
+			if (key === 'end') catShowBubble([BUBBLE_NEAR], key);
+		}
+	}
+
+	document.getElementById('catHot')?.addEventListener('click', () => {
+		location.href = '/about';
+	});
+
+	// 触发: 开始滚动阅读; 兜底: 停留 12s 也算在「读」
+	window.addEventListener('scroll', onScrollCat, { passive: true });
+	setTimeout(() => {
+		if (!catShown) onScrollCat();
+	}, 12000);
+</script>
